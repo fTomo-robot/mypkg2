@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# ワークスペースのディレクトリ指定
 dir=~
 [ "$1" != "" ] && dir="$1"
 
@@ -11,17 +10,24 @@ colcon build
 
 # 2. 環境設定の読み込み
 source /opt/ros/humble/setup.bash
-# GitHub Actions等では .bashrc ではなく install/setup.bash を直接読み込むのが確実です
 source install/setup.bash
 
-# 3. ノードの実行（15秒間実行してログを保存）
-# ここでは mypkg2 の talker ノード（電圧出力）を実行すると仮定します
-timeout 15 ros2 run mypkg2 shunt > /tmp/mypkg.log
+# 3. ノードの実行
+# timeoutで終了すると戻り値が124になるため、|| true でスクリプトの中断を防ぎます
+# また、標準エラー(2)を標準出力(1)にまとめてログに記録します
+timeout 15 ros2 run mypkg2 shunt > /tmp/mypkg.log 2>&1 || true
 
 # 4. 判定
-# ログの中に「送信中の電圧:」という文字列があるか、
-# かつ「0.」から始まる電圧値が含まれているかを正規表現でチェックします
-cat /tmp/mypkg.log | grep -E "送信中の電圧: 0\.[0-9]+"
+# ログを確認用に出力（Actionsのコンソールで見れるようにする）
+echo "--- Captured Log ---"
+cat /tmp/mypkg.log
+echo "--------------------"
 
-# grepの終了ステータス（見つかれば0）をそのままスクリプトの戻り値にする
-exit $?
+# grep で検索。-q は「見つかったかどうか」だけを確認するオプション
+if grep -qE "送信中の電圧: 0\.[0-9]+" /tmp/mypkg.log; then
+    echo "TEST PASSED"
+    exit 0
+else
+    echo "TEST FAILED: Target string not found in log"
+    exit 1
+fi
