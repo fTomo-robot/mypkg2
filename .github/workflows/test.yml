@@ -4,10 +4,10 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     container: ryuichiueda/ubuntu22.04-ros2:latest #前ページのコンテナを使うという宣言
-    steps:　
+    steps:
       - uses: actions/checkout@v2    #コンテナのカレントディレクトリにリポジトリを配置
       - name: build and test
         run: |
-          rsync -av ./ /root/ros2_ws/src/mypkg2/    # リポジトリの下をros2_ws下にコピー
-          cd /root/ros2_ws　 #↓追加のパッケージが必要なら実行前にrosdep
+          rsync -av ./ /root/ros2_ws/src/mypkg2/    #リポジトリの下をros2_ws下にコピー
+          cd /root/ros2_ws  #↓追加のパッケージが必要なら実行前にrosdep
           bash -xv ./src/mypkg2/test/test.bash /root #実行
