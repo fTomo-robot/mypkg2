@@ -11,10 +11,10 @@
 - current
   - 受信した電圧値と、あらかじめ設定しておいたシャント抵抗の抵抗値から電流値を計算するノード
   - プログラム名:current.py
-  - '/shunt_voltage' トピックを読む
+  - `/shunt_voltage` トピックを読む
   - シャント抵抗の抵抗値をもとに'I=V/R'によって電流値を計算
-  - サブスクライブ (Input):'/shunt_voltage' ([std_msgs/msg/Float32]): 入力電圧値 [V]
-  - パブリッシュ (Output):'/calculated_current' ([std_msgs/msg/Float32]): 計算後の電流値 [A]
+  - サブスクライブ (Input):`/shunt_voltage` ([std_msgs/msg/Float32]): 入力電圧値 [V]
+  - パブリッシュ (Output):`/calculated_current` ([std_msgs/msg/Float32]): 計算後の電流値 [A]
 
 
 #使用方法
