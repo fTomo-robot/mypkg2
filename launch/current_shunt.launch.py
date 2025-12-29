@@ -2,21 +2,16 @@
 # SPDX-FileCopyrightText: 2025 Tomotaka Fujiwara
 # SPDX-License-Identifier: BSD-3-Clause
 
-import launch
-import launch.actions
-import launch.substitutions
-import launch_ros.actions
+from launch import LaunchDescription
+from launch_ros.actions import Node
 
 def generate_launch_description():
-
-   shunt = launch_ros.actions.Node(
-      package='mypkg2',      #パッケージの名前を指定
-      executable='shunt',  #実行するファイルの指定
-      )
-   current = launch_ros.actions.Node(
-      package='mypkg2',
-      executable='current',
-      output='screen'        #ログを端末に出すための設定
-      )
-
-   return launch.LaunchDescription([shunt, current])
+    return LaunchDescription([
+        Node(package='mypkg2', executable='shunt', name='shunt_node'),
+        Node(
+            package='mypkg2',
+            executable='current',
+            name='current_node',
+            parameters=[{'shunt_resistance': 0.05}] # ここで値を指定
+        ),
+    ])

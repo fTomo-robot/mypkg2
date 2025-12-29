@@ -34,6 +34,33 @@
   - 内容:算出された回路の電流値
 
 # 使用方法
+## shunt
+  - 
+
+## current
+  -
+
+### シャント抵抗設定
+  - current ノードはシャント抵抗の値をパラメータとして保持しています。使用する抵抗に合わせて値を変更してください。
+    -- パラメータ名: `shunt_resistance`
+    -- デフォルト値: `0.1 [Ω] `
+  - 設定方法: Launchファイル内の parameters 項目を書き換えることで、任意の抵抗値を適用できます。
+```
+parameters=[{'shunt_resistance': 0.01}]
+```
+
+## launchfile
+  - コマンドを実行すると、電圧の生成（シミュレータ）と電流の計算が連動して動作します。
+  - [shunt-1]: 電圧シミュレータノードからの出力です。5秒ごとにランダムな電圧（0〜0.5V）を生成し、トピック `/shunt_voltage` に送信します。
+  - [current-2]: 電流計算ノードからの出力です。トピック経由で受信した電圧値に対し、設定したシャント抵抗値を適用して電流値を算出します。
+```
+$ ros2 launch mypkg2 current_shunt.launch.py
+
+[shunt-1] [INFO] [1766993698.643026729] [voltage_sim_node]: 送信中の電圧: 0.391 V
+[current-2] [INFO] [1766993698.643362847] [current_calc_node]: Voltage: 0.391V -> Current: 3.907A
+[shunt-1] [INFO] [1766993703.643141788] [voltage_sim_node]: 送信中の電圧: 0.062 V
+[current-2] [INFO] [1766993703.644429569] [current_calc_node]: Voltage: 0.062V -> Current: 0.620A
+```
 
 # ライセンス・コピーライト
 - このソフトウェアパッケージは，3条項BSDライセンスの下，再頒布および使用が許可されます．

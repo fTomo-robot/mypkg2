@@ -4,39 +4,39 @@
 
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import Float32  # 電圧や電流は小数になるためFloat32を使用
+from std_msgs.msg import Float32
 
-# 設定値
-SHUNT_OHMS = 0.1  # 使用するシャント抵抗の値をΩで指定
+class CurrentCalcNode(Node):
+    def __init__(self):
+        super().__init__('current_calc_node')
 
-rclpy.init()
-node = Node("current_calc_node")
+        # パラメータの宣言（名前, デフォルト値）
+        self.declare_parameter('shunt_resistance', 0.1)
 
-# 計算結果を配信するためのパブリッシャー
-pub = node.create_publisher(Float32, "current_out", 10)
+        # 電圧を購読
+        self.sub = self.create_subscription(Float32, 'shunt_voltage', self.cb, 10)
+        # 電流を配信
+        self.pub = self.create_publisher(Float32, 'calculated_current', 10)
 
-def cb(msg):
-    # msg.data にはシャント抵抗の両端電圧(V)が入っていると想定
-    voltage = msg.data
-    
-    # オームの法則 I = V / R
-    current = voltage / SHUNT_OHMS
-    
-    # 結果を表示
-    node.get_logger().info(f"Voltage: {voltage:.3f}V -> Current: {current:.3f}A")
-    
-    # 計算結果を送信
-    out_msg = Float32()
-    out_msg.data = current
-    pub.publish(out_msg)
+    def cb(self, msg):
+        # パラメータの最新値を取得
+        shunt_ohm = self.get_parameter('shunt_resistance').get_parameter_value().double_value
+
+        # I = V / R
+        current = msg.data / shunt_ohm
+
+        out_msg = Float32()
+        out_msg.data = current
+        self.pub.publish(out_msg)
+
+        self.get_logger().info(f"抵抗値: {shunt_ohm}Ω | 電圧: {msg.data:.3f}V -> 電流: {current:.3f}A")
 
 def main():
-    # 電圧トピック "shunt_voltage" を購読
-    sub = node.create_subscription(Float32, "shunt_voltage", cb, 10)
-    
+    rclpy.init()
+    node = CurrentCalcNode()
     try:
         rclpy.spin(node)
-    except KeyboardInterrupt:
+    except Exception:
         pass
     finally:
         node.destroy_node()
