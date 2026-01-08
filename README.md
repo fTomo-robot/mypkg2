@@ -1,12 +1,11 @@
-# current_shunt.launch.py
-![test](https://github.com/fTomo-robot/mypkg2/actions/workflows/test.yml/badge.svg)  
-電流監視パッケージ  
-- シャント抵抗の電圧を読み取り、電流に変換するパッケージ
+# 電流監視パッケージ
+![test](https://github.com/fTomo-robot/mypkg2/actions/workflows/test.yml/badge.svg)    
+- シャント抵抗の電圧を読み取り、電流に変換するROS 2パッケージ
+- `current`ノードは、外部のシャント抵抗と組み合わせることで電流を出力することができます。
 
-# テスト環境
-- 実行環境: GitHub-hosted runner (ubuntu-22.04)
-- コンテナイメージ: `ryuichiueda/ubuntu22.04-ros2:latest`
-	- ROS 2 Version: Humble
+# 動作環境
+- 実行環境: ubuntu-22.04
+    - ROS 2 Version: Humble
 
 # ノードの機能説明
 ## current
