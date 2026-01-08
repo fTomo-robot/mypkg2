@@ -10,12 +10,11 @@ class CurrentCalcNode(Node):
     def __init__(self):
         super().__init__('current_calc_node')
 
-        # パラメータの宣言（名前, デフォルト値）
         self.declare_parameter('shunt_resistance', 0.1)
 
-        # 電圧を購読
+        # 電圧読み込み
         self.sub = self.create_subscription(Float32, 'shunt_voltage', self.cb, 10)
-        # 電流を配信
+        # 電流出力
         self.pub = self.create_publisher(Float32, 'calculated_current', 10)
 
     def cb(self, msg):

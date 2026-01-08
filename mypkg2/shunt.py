@@ -9,7 +9,7 @@ import random
 
 rclpy.init()
 node = Node("voltage_sim_node")
-# トピック名 "shunt_voltage" でパブリッシャを作成
+# トピック名 "shunt_voltage" パブリッシャ
 pub = node.create_publisher(Float32, "shunt_voltage", 10)
 
 def cb():
