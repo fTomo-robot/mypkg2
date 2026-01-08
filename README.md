@@ -4,8 +4,8 @@
 - `current`ノードは、外部のシャント抵抗と組み合わせることで電流を出力することができます。
 
 # 動作環境
-- 実行環境: ubuntu-22.04
-    - ROS 2 Version: Humble
+- OS: ubuntu-22.04 LTS
+- ROS 2: Humble
 
 # ノードの機能説明
 ## current
