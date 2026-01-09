@@ -1,7 +1,7 @@
 # 電流監視パッケージ
 ![test](https://github.com/fTomo-robot/mypkg2/actions/workflows/test.yml/badge.svg)    
 - シャント抵抗の電圧を読み取り、電流に変換するROS 2パッケージ
-- `current`ノードは、外部のシャント抵抗と組み合わせることで電流を出力することができます。
+- `current`ノードは、外部に用意したシャント抵抗にかかる電圧をマイコンのADCなどを使用し、読み取ることで電流を出力することができます。
 
 # 動作環境
 - OS: Ubuntu 22.04 LTS
@@ -13,14 +13,14 @@
 - プログラム名:current.py
 - `/shunt_voltage` トピックを読む
 - シャント抵抗の抵抗値をもとに`I=V/R`によって電流値を計算
-- サブスクライブ (Input):`/shunt_voltage` ([std_msgs/msg/Float32]): 入力電圧値 [V]
-- パブリッシュ (Output):`/calculated_current` ([std_msgs/msg/Float32]): 計算後の電流値 [A]
+- サブスクライブ (Input):`/shunt_voltage` [std_msgs/msg/Float32]: 入力電圧値 [V]
+- パブリッシュ (Output):`/calculated_current` [std_msgs/msg/Float32]: 計算後の電流値 [A]
 
 ## shunt
 - シャント抵抗にかかる電圧を疑似的に生成するノード
 - プログラム名:shunt.py
 - 5秒ごとに0.0V~0.5Vの範囲でランダムに電圧値を生成する
-- パブリッシュ (Output):`/shunt_voltage` ([std_msgs/msg/Float32]): 疑似電圧値 [V]
+- パブリッシュ (Output):`/shunt_voltage` [std_msgs/msg/Float32]: 疑似電圧値 [V]
 
 # トピックの仕様説明
 ## `/shunt_voltage`
@@ -62,7 +62,7 @@ $ ros2 run mypkg2 current
 parameters=[{'shunt_resistance': 0.01}]
 ```
 
-## launchfile
+## launch file
 
 - コマンドを実行すると、電圧の生成（シミュレータ）と電流の計算が連動して動作します。
 - `[shunt-1]`: 電圧シミュレータノードからの出力です。5秒ごとにランダムな電圧（0.0〜0.5V）を生成し、トピック `/shunt_voltage` に送信します。
